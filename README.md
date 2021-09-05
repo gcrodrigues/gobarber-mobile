@@ -4,8 +4,7 @@
   <a href="#-requirements">Requirements</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#-technologies">Technologies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#-project">Project</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-how-to-execute">How to execute</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-
+  <a href="#-how-to-execute">How to execute</a>&nbsp;&nbsp;&nbsp;
 </p>
 
 ![Sign in screen on Iphone ](./.github/preview.png)
@@ -38,5 +37,3 @@ After running the server, you must:
 - Run `yarn start` to start Metro Bundler
 - If you are using android device/emulator, run `yarn android`
 - But if your device/emulator is an IOS, run `yarn ios`
-
----
