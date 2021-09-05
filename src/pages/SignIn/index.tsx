@@ -15,6 +15,7 @@ import { FormHandles } from '@unform/core'
 import * as Yup from 'yup'
 
 import { Button, Input } from '../../components'
+import { useAuth } from '../../hooks/auth'
 import getValidationErrors from '../../utils/getValidationErrors'
 import * as S from './styles'
 
@@ -29,33 +30,42 @@ const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null)
   const passwordInputRef = useRef<TextInput>(null)
   const navigation = useNavigation()
+  const { signIn } = useAuth()
 
-  const handleSignIn = useCallback(async (data: SignInFormData) => {
-    try {
-      formRef.current?.setErrors({})
+  const handleSignIn = useCallback(
+    async ({ email, password }: SignInFormData) => {
+      try {
+        formRef.current?.setErrors({})
 
-      const schema = Yup.object().shape({
-        email: Yup.string()
-          .required('E-mail required')
-          .email('Please enter a valid email'),
-        password: Yup.string().required('Password required'),
-      })
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required('E-mail required')
+            .email('Please enter a valid email'),
+          password: Yup.string().required('Password required'),
+        })
 
-      await schema.validate(data, {
-        abortEarly: false,
-      })
-    } catch (error) {
-      if (error instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(error)
-        formRef.current?.setErrors(errors)
-        return
+        await schema.validate(
+          { email, password },
+          {
+            abortEarly: false,
+          },
+        )
+
+        await signIn({ email, password })
+      } catch (error) {
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(error)
+          formRef.current?.setErrors(errors)
+          return
+        }
+        Alert.alert(
+          'Authentication error',
+          'An error occurred when trying to login.',
+        )
       }
-      Alert.alert(
-        'Authentication error',
-        'An error occurred when trying to login.',
-      )
-    }
-  }, [])
+    },
+    [signIn],
+  )
 
   return (
     <>

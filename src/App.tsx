@@ -4,14 +4,17 @@ import { NavigationContainer } from '@react-navigation/native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import Routes from './routes'
+import AppProvider from './hooks'
 
 const App: React.FC = () => (
-  <NavigationContainer>
-    <StatusBar barStyle="light-content" backgroundColor="#312e38" />
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Routes />
-    </GestureHandlerRootView>
-  </NavigationContainer>
+  <AppProvider>
+    <NavigationContainer>
+      <StatusBar barStyle="light-content" backgroundColor="#312e38" />
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Routes />
+      </GestureHandlerRootView>
+    </NavigationContainer>
+  </AppProvider>
 )
 
 export default App
