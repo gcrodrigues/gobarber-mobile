@@ -15,6 +15,7 @@ import { FormHandles } from '@unform/core'
 import * as Yup from 'yup'
 
 import { Button, Input } from '../../components'
+import { UserService } from '../../services'
 import getValidationErrors from '../../utils/getValidationErrors'
 import * as S from './styles'
 
@@ -32,33 +33,42 @@ const SignUp: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null)
   const navigation = useNavigation()
 
-  const handleSignUp = useCallback(async (data: SignUpFormData) => {
-    try {
-      formRef.current?.setErrors({})
+  const handleSignUp = useCallback(
+    async (data: SignUpFormData) => {
+      try {
+        formRef.current?.setErrors({})
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Name required'),
-        email: Yup.string()
-          .required('E-mail required')
-          .email('Please enter a valid email'),
-        password: Yup.string().min(6, 'At least 6 digits'),
-      })
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Name required'),
+          email: Yup.string()
+            .required('E-mail required')
+            .email('Please enter a valid email'),
+          password: Yup.string().min(6, 'At least 6 digits'),
+        })
 
-      await schema.validate(data, {
-        abortEarly: false,
-      })
-    } catch (error) {
-      if (error instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(error)
-        formRef.current?.setErrors(errors)
-        return
+        await schema.validate(data, {
+          abortEarly: false,
+        })
+
+        await UserService.createUser(data)
+
+        Alert.alert('Success', 'User created!')
+
+        navigation.goBack()
+      } catch (error) {
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(error)
+          formRef.current?.setErrors(errors)
+          return
+        }
+        Alert.alert(
+          'Authentication error',
+          'An error occurred when trying to login',
+        )
       }
-      Alert.alert(
-        'Authentication error',
-        'An error occurred when trying to login',
-      )
-    }
-  }, [])
+    },
+    [navigation],
+  )
 
   return (
     <>
